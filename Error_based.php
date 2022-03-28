@@ -1,7 +1,7 @@
 <div id="main">
     <h1>SQL Injection (Login Form/Error-based/UNION)</h1>
     <p>Hãy nhập thông tin đăng nhập nhé</p>
-    <form action="<?php echo ($_SERVER["SCRIPT_NAME"]); ?>" method="POST">
+    <form action="<?php echo ($_SERVER["SCRIPT_NAME"]); ?>" method="GET">
         <p><label for="login">Login:</label><br />
             <input type="text" id="login" name="login" size="20" autocomplete="off" />
         </p>
@@ -14,11 +14,15 @@
     <?php
     include("connect.php");
     $message = '';
-    if (isset($_POST["form"])) {
-        $login = $_POST["login"];
-        $password = $_POST["password"];
+    if (isset($_GET["form"])) {
+        $login = $_GET["login"];
+        // $login = mysql_real_escape_string($login);
+        $password = $_GET["password"];
         $password = hash('sha1', $password, false);
-        $sql = "SELECT * FROM users WHERE login = '" . $login . "' AND password = '" . $password . "'";
+        // $password = mysql_real_escape_string($password);
+        // $sql = "SELECT * FROM users WHERE id = $login";
+        $sql = "SELECT * FROM users WHERE login = '$login' AND password = '$password' ";
+        echo $sql;
         $recordset = mysql_query($sql, $link);
         if (!$recordset) {
             die("Error: " . mysql_error());
